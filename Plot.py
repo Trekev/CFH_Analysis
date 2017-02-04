@@ -2,7 +2,7 @@ import CFH_Tools
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-
+import toNESDISstandard
 
 
 
@@ -13,6 +13,8 @@ class RAOB(object):
         self.CFH = False
         self.RS92 = False
         self.RS41 = False
+        self.CFH41 = False
+        self.GRAW = False
         if 'CFH' in args:
             CFHDF = CFH_Tools.CFH(datarate=2)
             self.CFHDF = CFHDF.getCFHDF()
@@ -44,19 +46,32 @@ class RAOB(object):
                                                                                          'Lon','Time'))
             self.RS41DF['Alt'] /= 1000
             self.RS41 = True
+        if 'CFH41' in args:
+            self.CFH41 = True
+
+        if 'GRAW' in args:
+            self.GRAW = True
+            self.GRAWDF = toNESDISstandard.from_GRAW()
+            self.GRAWDF['Alt'] /=1000
 
     def plotRH(self):
         if self.CFH is True:
             CFHDF = self.CFHDF
             plt.plot(CFHDF['RH FP'],CFHDF['Alt'])
+            plt.axhline(y=int(self.trop) / 1000)
+        if self.CFH41 is True:
+            CFHDF = self.CFHDF
+            plt.plot(CFHDF['RH'],CFHDF['Alt'])
         if self.RS92 is True:
             plt.plot(self.RS92DF['RH'],self.RS92DF['Alt'])
         if self.RS41 is True:
             plt.plot(self.RS41DF['RH'],self.RS41DF['Alt'])
-        plt.axhline(y=int(self.trop)/1000)
+        if self.GRAW is True:
+            plt.plot(self.GRAWDF['Hu'],self.GRAWDF['Alt'])
+
         plt.xlabel('Relative Humidity (%)')
         plt.ylabel('Altitude (m)')
-        plt.title('RH vs Altitude\n'+ self.name)
+        plt.title('RH vs Altitude')
         plt.show()
 
     def plotRHDiff(self,RAOB1,RAOB2):
@@ -72,5 +87,5 @@ class RAOB(object):
         plt.title('RH Bias vs Altitude\n' + self.name)
         plt.show()
 
-a = RAOB('CFH','RS92')
+a = RAOB('RS41','GRAW')
 a.plotRH()

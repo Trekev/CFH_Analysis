@@ -84,7 +84,8 @@ class CFH(object):
                     break
             else:
                 count=0
-        self.df.to_csv(self.name)
+        CFHNAME = ('78000'+'_'+self.filename[25:32]+'_'+self.filename[34:40]+' SPEC_WALL_.txt')
+        self.df.to_csv(CFHNAME)
 
     def getCFHDF(self):
         CFH.dataclean(self)
@@ -94,25 +95,6 @@ class CFH(object):
     def getNAME(self):
         return self.name
 
-    def plotRH(self,):
-        df = self.df
-        plt.plot(df['RH FP'],df['Alt'],df['RH'],df['Alt'])
-        plt.axhline(y=int(self.trop)/1000)
-        plt.xlabel('Relative Humidity (%)')
-        plt.ylabel('Altitude (m)')
-        plt.title('RH vs Altitude\n'+ self.name)
-        plt.show()
-        #print(df['RH FP'])
-
-    def plotRHDiff(self):
-        df = self.df
-        plt.plot((df['RH FP']-df['RH']),df['Alt'])
-        plt.axhline(y=int(self.trop) / 1000)
-        plt.xlabel('CFH RH (%) - RS41 RH (%)')
-        plt.ylabel('Altitude (m)')
-        plt.title('RH Bias vs Altitude\n' + self.name)
-        plt.show()
-        # print(df['RH FP'])
 
 
 

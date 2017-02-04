@@ -1,0 +1,22 @@
+import os
+
+flightNum = input('What flight would you like to pull from?(NNN)')
+
+systemID = {'LMG': 'rtso',
+            'CFH': 78000,
+            'GRAW': 79000,
+            'MW41 (1)': 71999,
+            'MW41 (2)': 71998,
+            'MW41 (3)': 71997
+            }
+
+path = '/opt/NESDIS/Wallops Campaign' + flightNum
+os.chdir(path)
+
+for i in list(systemID.keys()):
+    if i in os.listdir(os.getcwd()):
+        os.system('cd ' + i)
+        for j in os.listdir(os.getcwd()):
+            if systemID[i] in j:
+                os.system('cp ' + j + ' ' + '/opt/NESDIS/Wallops Campaign/Processing')
+        os.system('../')
